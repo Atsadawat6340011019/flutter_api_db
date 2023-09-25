@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rest_api/adduser.dart';
+import 'package:rest_api/edituser.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -52,17 +54,43 @@ Future<void> getUsers() async {
         itemCount: users.length,
         itemBuilder: (context,index){
           final user = users[index];
-          final fullname = user['fullname'];
-          final username = user['username'];
+          final fullname = users[index]['fullname'];
+          final username = users[index]['username'];
           return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(''),
+            leading: GestureDetector(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => 
+                    Edituser(
+                      user: users,
+                      index: index,
+                    ),)
+                );
+              },
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(''),
+              ),
             ),
             title: Text(username),
             subtitle: Text(fullname),
           );
 
         }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddUser()),
+          );
+          
+        },
+        child: const Icon(
+          Icons.person_add_alt_1,
+          size: 30,
+          color: Colors.purple,
+        ),),
     );
   }
 }

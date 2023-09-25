@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rest_api/home.dart';
 class Login2 extends StatefulWidget {
   const Login2({super.key});
 
@@ -22,13 +23,13 @@ class _Login2State extends State<Login2> {
   int check = 0;
 
   Future<void> checkLogin() async {
-    String urlstr = 'http://localhost/addressbook/checklogin.php';
+    final urlstr = 'http://172.21.123.162/addressbook/checklogin.php';
     final url = Uri.parse(urlstr);
     final response = await http.post(
     url, 
     body: {
-      'username': user,
-      'password': pwd,
+      'username': user.text,
+      'password': pwd.text,
     });
 
   print(response.statusCode);
@@ -41,7 +42,21 @@ class _Login2State extends State<Login2> {
       setState(() {
       check = 1; //Login Complete
     });
-    } 
+    print('Result: $data');
+    
+    } else{
+      Fluttertoast.showToast(
+        msg: "Please check username or password",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+    
+    );
+    print('Result: $data');
+    }
   }
   }
 
@@ -118,7 +133,11 @@ class _Login2State extends State<Login2> {
                         onPressed: () {
                           // Validate returns true if the form is valid, or false otherwise.
                           if (_formkey.currentState!.validate()) {
-                             int check = checkLogin();
+                             checkLogin();
+                             Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const Home()),
+  );
                           }
                         },
                         child: const Text('Login'),

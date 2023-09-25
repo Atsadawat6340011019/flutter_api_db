@@ -4,22 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:rest_api/home.dart';
+class Edituser extends StatefulWidget {
+  final List user;
+  final int index;
 
-class AddUser extends StatefulWidget {
-  const AddUser({super.key});
+  const Edituser({super.key, required this.user, required this.index});
 
   @override
-  State<AddUser> createState() => _AddUserState();
+  State<Edituser> createState() => __EdituserState();
 }
 
-class _AddUserState extends State<AddUser> {
+class __EdituserState extends State<Edituser> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController fullname = TextEditingController();
   TextEditingController user = TextEditingController();
   TextEditingController pwd = TextEditingController();
-
-  Future<void> addUser() async {
-    final urlstr = 'http://172.21.123.162/addressbook/insert.php';
+  
+  Future<void> editUser() async {
+    final urlstr = 'http://172.21.123.162/addressbook/edit.php';
     final url = Uri.parse(urlstr);
     final response = await http.post(url, body: {
       'username': user.text,
@@ -37,7 +39,7 @@ class _AddUserState extends State<AddUser> {
         print('Result: $data');
       } else {
         Fluttertoast.showToast(
-            msg: "Please check username",
+            msg: "Please check again",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
@@ -53,7 +55,7 @@ class _AddUserState extends State<AddUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add User'),
+        title: const Text('Edit User'),
       ),
       body: Form(
         key: _formKey,
@@ -147,11 +149,7 @@ class _AddUserState extends State<AddUser> {
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        addUser();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const Home()),
-                        );
+                        
                       }
                     },
                     child: const Text('Add'),
